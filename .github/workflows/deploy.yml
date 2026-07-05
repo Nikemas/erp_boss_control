@@ -1,0 +1,56 @@
+name: Deploy
+
+# push в master → сборка Vite и выкладка статики в /opt/erp_backend/webroot/boss,
+# откуда её отдаёт nginx прод-стека под https://erp.erpsystemsales.com/boss/.
+# Секреты SSH_HOST / SSH_USER / SSH_KEY — те же, что в репо erp_backend.
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build
+        env:
+          # .env.production не в git (политика «секреты вне репо»),
+          # поэтому конфиг передаётся окружением. Тот же origin, что и API.
+          VITE_API_URL: /api/v1
+        run: npm run build
+
+      - name: Upload dist
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: 'dist/*'
+          target: /opt/erp_backend/webroot/boss.new
+          strip_components: 1
+
+      - name: Activate release
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            set -e
+            cd /opt/erp_backend/webroot
+            # Атомная подмена: nginx ни на миг не видит полупустой каталог.
+            rm -rf boss.old
+            [ -d boss ] && mv boss boss.old
+            mv boss.new boss
+            echo "✅ Boss Control deployed: $(date)"
