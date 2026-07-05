@@ -1,0 +1,7 @@
+node_modules
+dist
+# All env flavours (.env.production once held only VITE_API_URL, but the first
+# real secret dropped there must not reach git)
+.env
+.env.*
+!.env.example
