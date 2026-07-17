@@ -143,6 +143,11 @@ export const api = {
   impersonateStop: (branchId) =>
     request(`/admin/clients/${branchId}/impersonate/stop`, { method: "POST" }),
 
+  // Client activity reports (что клиенты продают/закупают)
+  getClientsReport: (params) => request(`/admin/reports/clients${qs(params)}`),
+  getClientReport: (branchId, params) =>
+    request(`/admin/reports/clients/${branchId}${qs(params)}`),
+
   // Payments
   getPayments: (params) => request(`/admin/payments${qs(params)}`),
 

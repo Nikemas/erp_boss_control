@@ -6,6 +6,7 @@ const NAV = [
   { key: "dashboard", label: "Дашборд", icon: "dashboard" },
   { key: "clients", label: "Клиенты", icon: "store" },
   { key: "payments", label: "Финансы", icon: "payments" },
+  { key: "reports", label: "Отчёты", icon: "bar_chart" },
   { key: "partners", label: "Партнёры", icon: "handshake" },
   { key: "promo", label: "Промокоды", icon: "ticket" },
   { key: "notifications", label: "Уведомления", icon: "bell" },

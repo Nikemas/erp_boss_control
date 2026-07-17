@@ -5,6 +5,7 @@ import LoginPage from "./pages/LoginPage.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import ClientsPage from "./pages/ClientsPage.jsx";
 import PaymentsPage from "./pages/PaymentsPage.jsx";
+import ReportsPage from "./pages/ReportsPage.jsx";
 import PartnersPage from "./pages/PartnersPage.jsx";
 import PromoPage from "./pages/PromoPage.jsx";
 import NotificationsPage from "./pages/NotificationsPage.jsx";
@@ -19,6 +20,7 @@ const PAGE_TITLES = {
   dashboard: "Дашборд",
   clients: "Клиенты",
   payments: "Финансы",
+  reports: "Отчёты по клиентам",
   partners: "Партнёры",
   promo: "Промокоды",
   notifications: "Уведомления",
@@ -71,6 +73,7 @@ export default function App() {
           {page === "dashboard" && <DashboardPage />}
           {page === "clients" && <ClientsPage />}
           {page === "payments" && <PaymentsPage />}
+          {page === "reports" && <ReportsPage />}
           {page === "partners" && <PartnersPage />}
           {page === "promo" && <PromoPage />}
           {page === "notifications" && <NotificationsPage />}

@@ -49,6 +49,17 @@ export function exportXlsx(rows, filename) {
   XLSX.writeFile(wb, filename.endsWith(".xlsx") ? filename : `${filename}.xlsx`);
 }
 
+// Export several sheets at once: sheets = [{ name, rows }] (rows = plain objects).
+export function exportXlsxSheets(sheets, filename) {
+  const wb = XLSX.utils.book_new();
+  for (const { name, rows } of sheets) {
+    const ws = XLSX.utils.json_to_sheet(rows && rows.length ? rows : [{}]);
+    // sheet names: ≤31 chars, no []:*?/\
+    XLSX.utils.book_append_sheet(wb, ws, name.replace(/[[\]:*?/\\]/g, " ").slice(0, 31));
+  }
+  XLSX.writeFile(wb, filename.endsWith(".xlsx") ? filename : `${filename}.xlsx`);
+}
+
 // Subscription status → russian label + badge class
 const STATUS_MAP = {
   active: { label: "Активна", cls: "success" },
